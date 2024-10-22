@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import CreateView, DeleteView
-from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.urls import reverse_lazy, reverse
 
 from .models import Post
 
@@ -31,12 +31,27 @@ class PostNew(CreateView):
 
     def get_success_url(self):
         post_id = self.object.pk
-        return reverse_lazy("post_detail", kwargs={"pk": post_id})
+        return reverse("post_detail", kwargs={"pk": post_id})
 
     def form_valid(self, form):
         # form.instance.title = form.instance.title.upper()
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "New post"
+        return context
 
 class PostDelete(DeleteView):
     model = Post
     success_url = reverse_lazy("post_list")
+
+class PostEdit(UpdateView):
+    model = Post
+    fields = ("author", "title", "text")
+    template_name = "blog/post_new.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Edit post"
+        return context
