@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView
 
 from .models import Post
 
@@ -20,3 +21,8 @@ class PostList(ListView):
 class PostDetail(DetailView):
     model = Post
     context_object_name = "post"
+
+class PostNew(CreateView):
+    model = Post
+    template_name = "blog/post_new.html"
+    fields = ("author", "title", "text")
