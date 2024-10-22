@@ -8,6 +8,7 @@ Bruform Blog - {{ post.title }}
     <h1>Post detail</h1>
 
     <a href="{% url 'post_list' %}">Back to list</a>
+    <a href="{% url 'post_delete' pk=post.pk %}">Delete post</a>
 
     <div>
         <h2>{{ post.title }}</h2>

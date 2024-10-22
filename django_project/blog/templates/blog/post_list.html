@@ -7,6 +7,7 @@
 
     {% for post in all_posts %}
         <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+        <a href="{% url 'post_delete' pk=post.pk %}">Delete</a>
         <p>{{ post.text|linebreaksbr }}</p>
     {% endfor %}
 
