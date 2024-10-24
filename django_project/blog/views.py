@@ -1,8 +1,9 @@
 from django.db.models.query import QuerySet
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.base import RedirectView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.models import User
 from django.db.models import Count
@@ -22,7 +23,7 @@ def post_list(request):
 class PostList(ListView):
     # model = Post
     context_object_name = "all_posts"
-    queryset = Post.objects.filter(published_date__lte=timezone.now())
+    queryset = Post.published.all()
 
 class PostDraftList(ListView):
     # template_name = "blog/post_list.html"
@@ -79,3 +80,14 @@ class About(TemplateView):
         # context["author_post_count"] = Post.objects.values("author").annotate(post_count=Count("author")).order_by("-post_count")
         context["author_count"] = Post.objects.values("author").annotate(Count("id")).count()
         return context
+
+class PostPublish(RedirectView):
+    pattern_name = "post_detail"
+
+    def get_redirect_url(self, *args, **kwargs):
+        # blog_post = Post.objects.get(pk=kwargs["pk"])
+        blog_post = get_object_or_404(Post, pk=kwargs["pk"])
+        blog_post.publish()
+
+        return super().get_redirect_url(*args, **kwargs)
+    

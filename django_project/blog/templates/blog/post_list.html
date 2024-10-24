@@ -3,7 +3,8 @@
 {% block content %}
     <h1>List of posts</h1>
 
-    <p>This is a list of all blog posts.</p>
+    <p>This is a list of all published blog posts.</p>
+    <p>You can find the drafts <a href="{% url 'post_draft_list' %}">here!</a></p>
 
     {% for post in all_posts %}
         <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>

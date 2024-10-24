@@ -3,7 +3,9 @@ from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse
 
-a = 3
+class PublishedPostsManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(published_date__lte=timezone.now())
 
 # Create your models here.
 class Post(models.Model):
@@ -13,6 +15,9 @@ class Post(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
     updated_date = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()
+    published = PublishedPostsManager()
 
     def get_absolute_url(self):
         return reverse("post_detail", kwargs={"pk": self.pk})
