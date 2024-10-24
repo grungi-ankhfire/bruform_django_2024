@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView, TemplateView
@@ -5,6 +6,8 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.models import User
 from django.db.models import Count
+from django.utils import timezone
+from django.db.models import Q
 from .models import Post
 
 # Create your views here.
@@ -17,8 +20,14 @@ def post_list(request):
 
 # Class-based view
 class PostList(ListView):
-    model = Post
+    # model = Post
     context_object_name = "all_posts"
+    queryset = Post.objects.filter(published_date__lte=timezone.now())
+
+class PostDraftList(ListView):
+    # template_name = "blog/post_list.html"
+    context_object_name = "all_posts"
+    queryset = Post.objects.filter(Q(published_date__gt=timezone.now()) | Q(published_date__isnull=True))
 
 class PostDetail(DetailView):
     model = Post
