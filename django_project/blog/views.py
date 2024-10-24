@@ -3,7 +3,8 @@ from django.http import HttpResponse
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy, reverse
-
+from django.contrib.auth.models import User
+from django.db.models import Count
 from .models import Post
 
 # Create your views here.
@@ -61,6 +62,11 @@ class About(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["post_count"] = 42512
-        context["author_count"] = 25
+        context["post_count"] = Post.objects.count()
+        # context["author_count"] = User.objects.count()  # Compte tous les utilisateurs
+        context["author_count"] = Post.objects.values("author").distinct().count()  # Compte les auteurs liés à un Post
+        # context["author_count"] = User.objects.filter(post__isnull=False).distinct().count()
+
+        # context["author_post_count"] = Post.objects.values("author").annotate(post_count=Count("author")).order_by("-post_count")
+        context["author_count"] = Post.objects.values("author").annotate(Count("id")).count()
         return context

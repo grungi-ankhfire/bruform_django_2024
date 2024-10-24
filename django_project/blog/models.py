@@ -11,9 +11,19 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
+    published_date = models.DateTimeField(blank=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return reverse("post_detail", kwargs={"pk": self.pk})
+
+    def publish(self):
+        self.published_date = timezone.now()
+        self.save()
+
+    def unpublish(self):
+        self.published_date = None
+        self.save()
 
     def __str__(self):
         return self.title

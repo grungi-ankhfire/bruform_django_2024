@@ -5,6 +5,13 @@
 <div>
     <p>This is a cool blog!</p>
     <p>You can read {{ post_count }} posts by {{ author_count }} authors.</p>
+    
+    <div>
+        {% for elem in author_post_count %}
+        <p>{{ elem.author }} - {{ elem.post_count }}</p>
+        {% endfor %}
+    </div>
+    
     <p>Made during "Python pour le Web avec Django" in 2024.</p>
 </div>
 
