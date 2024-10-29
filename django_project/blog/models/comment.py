@@ -14,3 +14,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.body
+
+    def get_absolute_url(self):
+        return self.post.get_absolute_url()

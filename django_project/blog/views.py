@@ -31,13 +31,30 @@ class PostDraftList(ListView):
     context_object_name = "all_posts"
     queryset = Post.objects.filter(Q(published_date__gt=timezone.now()) | Q(published_date__isnull=True))
 
+
 class PostDetail(ModelFormMixin, DetailView):
     model = Post
     form_class = CommentForm
     context_object_name = "post"
 
     def post(self, request, pk):
-        pass
+        form = self.get_form()
+        self.object = self.get_object()
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.post = self.object
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["comments"] = self.object.comments.filter(active=True)
+        return context
+
 
 class PostNew(CreateView):
     model = Post

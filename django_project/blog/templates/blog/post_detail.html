@@ -20,11 +20,22 @@ Bruform Blog - {{ post.title }}
     </div>
 
     <div>
+        <h2>Leave a comment</h2>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-success">Add comment</button>
         </form>
+    </div>
+
+    <div>
+        <h2>Comments ({{ comments|length }})</h2>
+        {% for comment in comments %}
+            <div>
+                <p>By {{ comment.name }} at {{ comment.created_date }}</p>
+                <p>{{ comment.body|linebreaksbr }}</p>
+            </div>
+        {% endfor %}
     </div>
 
 {% endblock %}

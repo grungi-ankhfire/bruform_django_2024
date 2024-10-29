@@ -6,3 +6,8 @@
 .bf-logo {
     max-width: 200px;
 }
+
+.errorlist {
+    color: red;
+    background-color: pink;
+}
