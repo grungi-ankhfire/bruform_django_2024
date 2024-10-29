@@ -18,4 +18,13 @@ Bruform Blog - {{ post.title }}
         <h2>{{ post.title }}</h2>
         <p>{{ post.text|linebreaksbr }}</p>
     </div>
+
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Add comment</button>
+        </form>
+    </div>
+
 {% endblock %}

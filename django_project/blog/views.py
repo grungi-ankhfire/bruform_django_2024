@@ -2,7 +2,7 @@ from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.views.generic import ListView, DetailView, TemplateView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView, ModelFormMixin
 from django.views.generic.base import RedirectView
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.models import User
@@ -10,6 +10,7 @@ from django.db.models import Count
 from django.utils import timezone
 from django.db.models import Q
 from .models.post import Post
+from .forms import CommentForm
 
 # Create your views here.
 # Function-based view
@@ -30,9 +31,13 @@ class PostDraftList(ListView):
     context_object_name = "all_posts"
     queryset = Post.objects.filter(Q(published_date__gt=timezone.now()) | Q(published_date__isnull=True))
 
-class PostDetail(DetailView):
+class PostDetail(ModelFormMixin, DetailView):
     model = Post
+    form_class = CommentForm
     context_object_name = "post"
+
+    def post(self, request, pk):
+        pass
 
 class PostNew(CreateView):
     model = Post
