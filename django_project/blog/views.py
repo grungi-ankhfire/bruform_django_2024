@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.utils import timezone
 from django.db.models import Q
-from .models import Post
+from .models.post import Post
 
 # Create your views here.
 # Function-based view
