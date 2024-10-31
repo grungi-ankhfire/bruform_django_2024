@@ -9,11 +9,14 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.utils import timezone
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models.post import Post
 from .forms import CommentForm
 
 # Create your views here.
 # Function-based view
+@login_required
 def post_list(request):
 
     posts = Post.objects.all()
@@ -56,10 +59,10 @@ class PostDetail(ModelFormMixin, DetailView):
         return context
 
 
-class PostNew(CreateView):
+class PostNew(LoginRequiredMixin, CreateView):
     model = Post
     template_name = "blog/post_new.html"
-    fields = ("author", "title", "text")
+    fields = ("title", "text")
     #success_url = reverse_lazy("post_list")
 
     def get_success_url(self):
@@ -67,6 +70,7 @@ class PostNew(CreateView):
         return reverse("post_detail", kwargs={"pk": post_id})
 
     def form_valid(self, form):
+        form.instance.author = self.request.user
         # form.instance.title = form.instance.title.upper()
         return super().form_valid(form)
     
@@ -75,11 +79,11 @@ class PostNew(CreateView):
         context["page_title"] = "New post"
         return context
 
-class PostDelete(DeleteView):
+class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = reverse_lazy("post_list")
 
-class PostEdit(UpdateView):
+class PostEdit(LoginRequiredMixin, UpdateView):
     model = Post
     fields = ("author", "title", "text")
     template_name = "blog/post_new.html"
