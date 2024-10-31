@@ -21,7 +21,15 @@
                 <h1><a href="/">Bruform Blog</a></h1>
                 <img class="bf-logo img-thumbnail" src="{% static 'blog/BF_logo_couleur_rvb.png' %}" alt="">
                 <div>
+                    {% if user.is_authenticated %}
                     <a href="{% url 'post_new' %}" class="btn btn-primary rounded-pill px-3">Nouveau post</a>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary rounded-pill px-3">Logout</button>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary rounded-pill px-3">Login</a>
+                    {% endif %}
                 </div>
             </div> 
             <div class="col-md-3"></div> 
