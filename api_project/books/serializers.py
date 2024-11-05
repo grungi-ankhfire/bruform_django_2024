@@ -19,5 +19,16 @@ class AuthorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Author
+        fields = ["id", "first_name", "last_name"]
+        depth = 1
+
+
+class AuthorInstanceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Author
         fields = ["id", "first_name", "last_name", "books"]
         depth = 1
+
+
+
