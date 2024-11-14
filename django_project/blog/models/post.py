@@ -15,6 +15,7 @@ class Post(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
     updated_date = models.DateTimeField(auto_now=True)
+    image = models.ImageField(blank=True, null=True, upload_to="img/")
 
     objects = models.Manager()
     published = PublishedPostsManager()
